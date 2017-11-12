@@ -17,7 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     
-    let viewController: BrowserVC = BrowserVC()
+//    let viewController: BrowserVC = BrowserVC()
+    let viewController: TabVC = TabVC()
     navigationController = UINavigationController(rootViewController: viewController)
     
     self.window = UIWindow(frame: UIScreen.main.bounds)

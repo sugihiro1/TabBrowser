@@ -9,35 +9,47 @@
 import UIKit
 import WebKit
 
+@objc protocol BrowserVcDelegate {
+  // デリゲートメソッド定義
+  func saveTab(wkWebView:WKWebView)
+}
+
 class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WKUIDelegate {
-  
+ 
   private var webView: WKWebView!
   private var searchBar:UISearchBar!
   private var reloadBtn:UIBarButtonItem!
   private var stopBtn:UIBarButtonItem!
   private var progressView: UIProgressView!
   
+  weak var delegate: AnyObject?
+  
+  init(delegate: AnyObject?, wKWebView:WKWebView!,url:String!) {
+    super.init(nibName: nil, bundle: nil)
+    self.delegate = delegate
+    self.webView = wKWebView
+    // ナビゲーションの戻るを非表示
+    self.navigationItem.setHidesBackButton(true, animated:false)
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+  }
+  
+  required override init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: Bundle!) {
+    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+  }
+  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // WKWebViewを生成
-    webView = WKWebView(frame:CGRect(x:0, y:0, width:self.view.bounds.size.width, height:self.view.bounds.size.height - 40))
+    // ステータスバーの高さを取得
+    let statusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.height
     
-    // フリップで進む・戻るを許可
-    webView.allowsBackForwardNavigationGestures = true
+    // ナビゲーションバーの高さを取得
+    let navBarHeight = self.navigationController?.navigationBar.frame.size.height
     
-    // Googleを表示
-    let urlString = "http://www.google.com"
-    let encodedUrlString = urlString.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed)
-    
-    let url = NSURL(string: encodedUrlString!)
-    let request = NSURLRequest(url: url! as URL)
-    webView.load(request as URLRequest)
-    
-    // Viewに貼り付け
-    self.view.addSubview(webView)
-    
-
     // ツールバー
     let toolbar = UIToolbar(frame: CGRect(x:0, y:self.view.bounds.size.height - 44, width:self.view.bounds.size.width, height:40.0))
     toolbar.layer.position = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height-20.0)
@@ -45,19 +57,19 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     toolbar.tintColor = UIColor.white
     
     // 戻るボタン
-    let backBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
+    let backBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
     backBtnView.setBackgroundImage(UIImage(named: "back"), for: .normal)
     backBtnView.addTarget(self, action: #selector(onClickBackBarButton), for: .touchUpInside)
     let backBtn = UIBarButtonItem(customView: backBtnView)
-
+    
     // 進むボタン
-    let forwardBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
+    let forwardBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
     forwardBtnView.setBackgroundImage(UIImage(named: "forward"), for: .normal)
     forwardBtnView.addTarget(self, action: #selector(onClickForwardBarButton), for: .touchUpInside)
     let forwardBtn = UIBarButtonItem(customView: forwardBtnView)
     
     // ブックマークボタン
-    let bookmarkBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
+    let bookmarkBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
     bookmarkBtnView.setBackgroundImage(UIImage(named: "bookmark"), for: .normal)
     bookmarkBtnView.addTarget(self, action: #selector(onClickBookmarkBarButton), for: .touchUpInside)
     let bookmarkBtn = UIBarButtonItem(customView: bookmarkBtnView)
@@ -69,7 +81,7 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     bookmarkBtnView.addGestureRecognizer(bookmarkLongPressGesture)
     
     // タブボタン
-    let tabBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
+    let tabBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
     tabBtnView.setBackgroundImage(UIImage(named: "tab"), for: .normal)
     tabBtnView.addTarget(self, action: #selector(onClickTabBarButton), for: .touchUpInside)
     let tabBtn = UIBarButtonItem(customView: tabBtnView)
@@ -80,7 +92,6 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     // ツールバーに追加する.
     toolbar.items = [backBtn, flexibleItem, forwardBtn, flexibleItem, bookmarkBtn, flexibleItem, tabBtn]
     self.view.addSubview(toolbar)
-
     
     // 検索バーを作成する.
     searchBar = UISearchBar(frame:CGRect(x:0, y:0, width:270, height:80))
@@ -118,10 +129,37 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     progressView.transform = CGAffineTransform(scaleX: 1.0, y: 2.0)
     self.navigationItem.titleView?.addSubview(progressView)
     
+    if(self.webView == nil){
+      // 新規WKWebViewを生成
+      webView = WKWebView(frame:CGRect(x:0, y:statusBarHeight+navBarHeight!, width:self.view.bounds.size.width, height:self.view.bounds.size.height-(statusBarHeight+navBarHeight!+40)))
+      
+      // Googleを表示
+      let urlString = "http://www.google.com"
+      let encodedUrlString = urlString.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed)
+      let url = NSURL(string: encodedUrlString!)
+      let request = NSURLRequest(url: url! as URL)
+      webView.load(request as URLRequest)
+    }
+    else {
+      // 既存のWKWebViewを開いた時 検索バーにURLをセット
+      self.searchBar.text = webView.url?.absoluteString
+    }
+    
+    // フリップで進む・戻るを許可
+    webView.allowsBackForwardNavigationGestures = true
+    
+    self.webView.navigationDelegate = self
+    self.webView!.uiDelegate = self
+    
+    // Viewに貼り付け
+    self.view.addSubview(webView)
+    
     // WebViewの読み込み状態を監視する
     self.webView.addObserver(self, forKeyPath:"estimatedProgress", options:.new, context:nil)
-
+    
   }
+  
+
   
   @objc func onClickBackBarButton(sender: UIButton){
     // 前のページ
@@ -137,10 +175,6 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
   @objc func longPressBookmark(sender: UILongPressGestureRecognizer){
     // 長押し：ブックマーク追加
   }
-  @objc func onClickTabBarButton(sender: UIButton) {
-    // タブ一覧
-  }
-  
   
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     // ソフトウェアキーボードの検索ボタンが押された
@@ -196,6 +230,9 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
           UIApplication.shared.isNetworkActivityIndicatorVisible = false
           self.navigationItem.rightBarButtonItem = reloadBtn
           searchBar.text = webView.url?.absoluteString
+          
+          // タブのサムネイル画像を保存
+//          saveTab(wkWebView:self.webView)  // これを入れると terminating with uncaught exception of type NSException　となってしまう。
         }
       }
     }
@@ -206,6 +243,39 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     self.webView!.uiDelegate = nil
   }
   
+  // ツールバーのタブボタンをタップした時にTabVcに戻る処理
+  @objc func onClickTabBarButton(sender: UIButton) {
+    tabDataList[myTabIndexPathRow].webView = self.webView
+    saveTab(wkWebView:self.webView)
+    print("タブボタン タップ \(tabDataList[myTabIndexPathRow].webView)")
+    navigationController?.popToViewController(navigationController!.viewControllers[0], animated: false)
+  }
+  
+
+  // タブの保存
+  func saveTab(wkWebView:WKWebView){     // この func が呼び出されない。
+    //    self.tabDataList[self.myTabIndexPathRow].webView = wkWebView
+    tabDataList[myTabIndexPathRow].webView = wkWebView
+    // すぐ実行すると真っ白な画像が撮れる為 少し間を空けてサムネイル画像を保存
+//    Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: Selector(("saveTabImageExec")), userInfo: nil, repeats: false)
+    saveTabImageExec()
+//    print("Saved WebView")
+  }
+  
+  func saveTabImageExec(){
+
+    let queue = DispatchQueue(label: "queue")
+    queue.async{
+      let webView = tabDataList[myTabIndexPathRow].webView
+      UIGraphicsBeginImageContextWithOptions(webView!.bounds.size, true, 0);
+      webView!.drawHierarchy(in:webView!.bounds, afterScreenUpdates: false);
+      let snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
+      UIGraphicsEndImageContext();
+      tabDataList[myTabIndexPathRow].image = snapshotImage
+    }
+ 
+  }
+
   @objc func onClickReload(sender : UIButton){
     // ページを再読み込み
     self.webView.reload()
@@ -217,10 +287,124 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
   }
   
   
+  
+  
+
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
   
+
+  
+  /*
+   override func viewDidLoad() {
+   super.viewDidLoad()
+   
+   // WKWebViewを生成
+   webView = WKWebView(frame:CGRect(x:0, y:0, width:self.view.bounds.size.width, height:self.view.bounds.size.height - 40))
+   
+   // フリップで進む・戻るを許可
+   webView.allowsBackForwardNavigationGestures = true
+   
+   // Googleを表示
+   let urlString = "http://www.google.com"
+   let encodedUrlString = urlString.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed)
+   
+   let url = NSURL(string: encodedUrlString!)
+   let request = NSURLRequest(url: url! as URL)
+   webView.load(request as URLRequest)
+   
+   // Viewに貼り付け
+   self.view.addSubview(webView)
+   
+   
+   // ツールバー
+   let toolbar = UIToolbar(frame: CGRect(x:0, y:self.view.bounds.size.height - 44, width:self.view.bounds.size.width, height:40.0))
+   toolbar.layer.position = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height-20.0)
+   toolbar.barStyle = .default
+   toolbar.tintColor = UIColor.white
+   
+   // 戻るボタン
+   let backBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
+   backBtnView.setBackgroundImage(UIImage(named: "back"), for: .normal)
+   backBtnView.addTarget(self, action: #selector(onClickBackBarButton), for: .touchUpInside)
+   let backBtn = UIBarButtonItem(customView: backBtnView)
+   
+   // 進むボタン
+   let forwardBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
+   forwardBtnView.setBackgroundImage(UIImage(named: "forward"), for: .normal)
+   forwardBtnView.addTarget(self, action: #selector(onClickForwardBarButton), for: .touchUpInside)
+   let forwardBtn = UIBarButtonItem(customView: forwardBtnView)
+   
+   // ブックマークボタン
+   let bookmarkBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
+   bookmarkBtnView.setBackgroundImage(UIImage(named: "bookmark"), for: .normal)
+   bookmarkBtnView.addTarget(self, action: #selector(onClickBookmarkBarButton), for: .touchUpInside)
+   let bookmarkBtn = UIBarButtonItem(customView: bookmarkBtnView)
+   
+   // ブックマークボタン長押しのジェスチャー
+   let bookmarkLongPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressBookmark))
+   bookmarkLongPressGesture.minimumPressDuration = 1.0// 長押し-最低1秒間は長押しする.
+   bookmarkLongPressGesture.allowableMovement = 150// 長押し-指のズレは15pxまで.
+   bookmarkBtnView.addGestureRecognizer(bookmarkLongPressGesture)
+   
+   // タブボタン
+   let tabBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
+   tabBtnView.setBackgroundImage(UIImage(named: "tab"), for: .normal)
+   tabBtnView.addTarget(self, action: #selector(onClickTabBarButton), for: .touchUpInside)
+   let tabBtn = UIBarButtonItem(customView: tabBtnView)
+   
+   // スペーサー
+   let flexibleItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+   
+   // ツールバーに追加する.
+   toolbar.items = [backBtn, flexibleItem, forwardBtn, flexibleItem, bookmarkBtn, flexibleItem, tabBtn]
+   self.view.addSubview(toolbar)
+   
+   
+   // 検索バーを作成する.
+   searchBar = UISearchBar(frame:CGRect(x:0, y:0, width:270, height:80))
+   searchBar.delegate = self
+   searchBar.layer.position = CGPoint(x: self.view.bounds.width/2, y: 20)
+   searchBar.searchBarStyle = UISearchBarStyle.minimal
+   searchBar.placeholder = "URLまたは検索ワード"
+   searchBar.tintColor = UIColor.cyan
+   // 余計なボタンは非表示にする.
+   searchBar.showsSearchResultsButton = false
+   searchBar.showsCancelButton = false
+   searchBar.showsBookmarkButton = false
+   
+   // UINavigationBar上に、UISearchBarを追加
+   self.navigationItem.titleView = searchBar
+   
+   // Reloadボタン
+   let reloadBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
+   reloadBtnView.setBackgroundImage(UIImage(named: "reload"), for: .normal)
+   reloadBtnView.addTarget(self, action: #selector(onClickReload), for: .touchUpInside)
+   reloadBtn = UIBarButtonItem(customView: reloadBtnView)
+   self.navigationItem.rightBarButtonItem = reloadBtn
+   
+   // Stopボタン
+   let stopdBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
+   stopdBtnView.setBackgroundImage(UIImage(named: "stop"), for: .normal)
+   stopdBtnView.addTarget(self, action: #selector(onClickStop), for: .touchUpInside)
+   stopBtn = UIBarButtonItem(customView: stopdBtnView)
+   
+   // ProgressViewを作成する.
+   progressView = UIProgressView(frame: CGRect(x:0, y:0, width:self.view.bounds.size.width * 2, height:20))
+   progressView.progressTintColor = UIColor.green
+   progressView.trackTintColor = UIColor.white
+   progressView.layer.position = CGPoint(x:0, y:(self.navigationController?.navigationBar.frame.size.height)!)
+   progressView.transform = CGAffineTransform(scaleX: 1.0, y: 2.0)
+   self.navigationItem.titleView?.addSubview(progressView)
+   
+   // WebViewの読み込み状態を監視する
+   self.webView.addObserver(self, forKeyPath:"estimatedProgress", options:.new, context:nil)
+   
+   }
+   */
   
 }
+
+
