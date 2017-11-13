@@ -7,25 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9B2646A51FB0138A008CEDC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2646A41FB0138A008CEDC5 /* AppDelegate.swift */; };
-		9B2646A71FB0138A008CEDC5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2646A61FB0138A008CEDC5 /* ViewController.swift */; };
-		9B2646AA1FB0138A008CEDC5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B2646A81FB0138A008CEDC5 /* Main.storyboard */; };
+		105A197ADE175C4ACFE93506 /* Pods_TabBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADA70122FF9DF679E50E0FF5 /* Pods_TabBrowser.framework */; };
 		9B2646AC1FB0138A008CEDC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B2646AB1FB0138A008CEDC5 /* Assets.xcassets */; };
 		9B2646AF1FB0138A008CEDC5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B2646AD1FB0138A008CEDC5 /* LaunchScreen.storyboard */; };
 		9B2646B71FB01543008CEDC5 /* BrowserVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2646B61FB01543008CEDC5 /* BrowserVC.swift */; };
 		9B2646B91FB0606F008CEDC5 /* TabVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2646B81FB0606F008CEDC5 /* TabVC.swift */; };
+		9B3C86041FB91B900005113A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3C86031FB91B8E0005113A /* AppDelegate.swift */; };
+		9B3C86061FB937A20005113A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B3C86051FB937A20005113A /* Main.storyboard */; };
+		9B3C86081FB9383E0005113A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3C86071FB9383E0005113A /* ViewController.swift */; };
+		9B3C860C1FB9385E0005113A /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3C860B1FB9385E0005113A /* SearchResult.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		03E7D93965B314B1E6141EA0 /* Pods-TabBrowser.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TabBrowser.release.xcconfig"; path = "Pods/Target Support Files/Pods-TabBrowser/Pods-TabBrowser.release.xcconfig"; sourceTree = "<group>"; };
+		7442D8DFDEB5BA4D1E7538D5 /* Pods-TabBrowser.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TabBrowser.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TabBrowser/Pods-TabBrowser.debug.xcconfig"; sourceTree = "<group>"; };
 		9B2646A11FB0138A008CEDC5 /* TabBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TabBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9B2646A41FB0138A008CEDC5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		9B2646A61FB0138A008CEDC5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		9B2646A91FB0138A008CEDC5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9B2646AB1FB0138A008CEDC5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9B2646AE1FB0138A008CEDC5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9B2646B01FB0138A008CEDC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9B2646B61FB01543008CEDC5 /* BrowserVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserVC.swift; sourceTree = "<group>"; };
 		9B2646B81FB0606F008CEDC5 /* TabVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVC.swift; sourceTree = "<group>"; };
+		9B3C86031FB91B8E0005113A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9B3C86051FB937A20005113A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		9B3C86071FB9383E0005113A /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9B3C860B1FB9385E0005113A /* SearchResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
+		ADA70122FF9DF679E50E0FF5 /* Pods_TabBrowser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TabBrowser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,17 +39,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				105A197ADE175C4ACFE93506 /* Pods_TabBrowser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8D880370F56DD9BD988640FA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7442D8DFDEB5BA4D1E7538D5 /* Pods-TabBrowser.debug.xcconfig */,
+				03E7D93965B314B1E6141EA0 /* Pods-TabBrowser.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		9B2646981FB0138A008CEDC5 = {
 			isa = PBXGroup;
 			children = (
 				9B2646A31FB0138A008CEDC5 /* TabBrowser */,
 				9B2646A21FB0138A008CEDC5 /* Products */,
+				8D880370F56DD9BD988640FA /* Pods */,
+				E3F48A63E4E6BB5619DFFDFB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,16 +76,25 @@
 		9B2646A31FB0138A008CEDC5 /* TabBrowser */ = {
 			isa = PBXGroup;
 			children = (
-				9B2646A41FB0138A008CEDC5 /* AppDelegate.swift */,
+				9B3C86031FB91B8E0005113A /* AppDelegate.swift */,
 				9B2646B81FB0606F008CEDC5 /* TabVC.swift */,
 				9B2646B61FB01543008CEDC5 /* BrowserVC.swift */,
-				9B2646A61FB0138A008CEDC5 /* ViewController.swift */,
-				9B2646A81FB0138A008CEDC5 /* Main.storyboard */,
+				9B3C86051FB937A20005113A /* Main.storyboard */,
+				9B3C86071FB9383E0005113A /* ViewController.swift */,
+				9B3C860B1FB9385E0005113A /* SearchResult.swift */,
 				9B2646AB1FB0138A008CEDC5 /* Assets.xcassets */,
 				9B2646AD1FB0138A008CEDC5 /* LaunchScreen.storyboard */,
 				9B2646B01FB0138A008CEDC5 /* Info.plist */,
 			);
 			path = TabBrowser;
+			sourceTree = "<group>";
+		};
+		E3F48A63E4E6BB5619DFFDFB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ADA70122FF9DF679E50E0FF5 /* Pods_TabBrowser.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -77,9 +104,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9B2646B31FB0138A008CEDC5 /* Build configuration list for PBXNativeTarget "TabBrowser" */;
 			buildPhases = (
+				75D08892CF5922B354C709AA /* [CP] Check Pods Manifest.lock */,
 				9B26469D1FB0138A008CEDC5 /* Sources */,
 				9B26469E1FB0138A008CEDC5 /* Frameworks */,
 				9B26469F1FB0138A008CEDC5 /* Resources */,
+				332E3A7211CEDBC2634083BB /* [CP] Embed Pods Frameworks */,
+				9827F24AA73F111844A70497 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -131,20 +161,69 @@
 			files = (
 				9B2646AF1FB0138A008CEDC5 /* LaunchScreen.storyboard in Resources */,
 				9B2646AC1FB0138A008CEDC5 /* Assets.xcassets in Resources */,
-				9B2646AA1FB0138A008CEDC5 /* Main.storyboard in Resources */,
+				9B3C86061FB937A20005113A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		332E3A7211CEDBC2634083BB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TabBrowser/Pods-TabBrowser-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		75D08892CF5922B354C709AA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		9827F24AA73F111844A70497 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TabBrowser/Pods-TabBrowser-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9B26469D1FB0138A008CEDC5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B2646A71FB0138A008CEDC5 /* ViewController.swift in Sources */,
-				9B2646A51FB0138A008CEDC5 /* AppDelegate.swift in Sources */,
 				9B2646B91FB0606F008CEDC5 /* TabVC.swift in Sources */,
+				9B3C86041FB91B900005113A /* AppDelegate.swift in Sources */,
+				9B3C86081FB9383E0005113A /* ViewController.swift in Sources */,
+				9B3C860C1FB9385E0005113A /* SearchResult.swift in Sources */,
 				9B2646B71FB01543008CEDC5 /* BrowserVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -152,14 +231,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		9B2646A81FB0138A008CEDC5 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				9B2646A91FB0138A008CEDC5 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		9B2646AD1FB0138A008CEDC5 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -280,6 +351,7 @@
 		};
 		9B2646B41FB0138A008CEDC5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7442D8DFDEB5BA4D1E7538D5 /* Pods-TabBrowser.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -295,6 +367,7 @@
 		};
 		9B2646B51FB0138A008CEDC5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 03E7D93965B314B1E6141EA0 /* Pods-TabBrowser.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
