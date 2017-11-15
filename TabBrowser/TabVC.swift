@@ -34,11 +34,6 @@ class TabVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSou
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    // ↓viewDidLoad()に一時的に追加
-    // TEST用データ
-//    tabDataList = [TabData(),TabData(),TabData(),TabData(),TabData()]
-//    tabDataList = [TabData()]
- 
 
     // CollectionViewを作成する
     let layout = UICollectionViewFlowLayout()
@@ -116,13 +111,10 @@ class TabVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSou
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     // 選択したタブを保持
     myTabIndexPathRow = indexPath.row
-//    self.myTabIndexPathRow = indexPath.row
+
     // ブラウザ画面に遷移
     print(indexPath.row)
-    print(tabDataList[indexPath.row].webView)
-//    print(self.tabDataList[indexPath.row].webView)
     self.navigationController?.pushViewController(BrowserVC(delegate:self ,wKWebView: tabDataList[indexPath.row].webView,url:nil), animated: false)
-//    self.navigationController?.pushViewController(BrowserVC(delegate:self ,wKWebView: self.tabDataList[indexPath.row].webView,url:nil), animated: false)
     return
   }
 
