@@ -21,7 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
  
     DropboxClientsManager.setupWithAppKey("8yhy6e69tiewf1c")
     
-//    let viewController: BrowserVC = BrowserVC()
     let viewController: TabVC = TabVC()
     navigationController = UINavigationController(rootViewController: viewController)
     

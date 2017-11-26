@@ -14,21 +14,24 @@ import SVProgressHUD
 
 @objc protocol BrowserVcDelegate {
   // デリゲートメソッド定義
-  func saveTab(wkWebView:WKWebView)
+  func saveTab(wkWebView:UIWebView)
 }
+
+
 
 class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WKUIDelegate {
  
-  private var webView: WKWebView!
+  private var webView: UIWebView!
   private var searchBar:UISearchBar!
   private var reloadBtn:UIBarButtonItem!
   private var stopBtn:UIBarButtonItem!
   private var progressView: UIProgressView!
   
-
+//  let navigationController: UINavigationController
+  
   weak var delegate: AnyObject?
   
-  init(delegate: AnyObject?, wKWebView:WKWebView!,url:String!) {
+  init(delegate: AnyObject?, wKWebView:UIWebView!,url:String!) {
     super.init(nibName: nil, bundle: nil)
     self.delegate = delegate
     self.webView = wKWebView
@@ -102,7 +105,7 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     searchBar.delegate = self
     searchBar.layer.position = CGPoint(x: self.view.bounds.width/2, y: 20)
     searchBar.searchBarStyle = UISearchBarStyle.minimal
-    searchBar.placeholder = "URLまたは検索ワード"
+    searchBar.placeholder = "検索ワード"
     searchBar.tintColor = UIColor.cyan
     // 余計なボタンは非表示にする.
     searchBar.showsSearchResultsButton = false
@@ -112,19 +115,20 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     // UINavigationBar上に、UISearchBarを追加
     self.navigationItem.titleView = searchBar
     
-    // Reloadボタン
+    // 検索ボタン
     let reloadBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
-    reloadBtnView.setBackgroundImage(UIImage(named: "reload"), for: .normal)
-    reloadBtnView.addTarget(self, action: #selector(onClickReload), for: .touchUpInside)
+    reloadBtnView.setTitle("検索", for: .normal)
+    reloadBtnView.setTitleColor(UIColor.blue, for: .normal)
+    reloadBtnView.addTarget(self, action: #selector(onClickSearchButton), for: .touchUpInside)
     reloadBtn = UIBarButtonItem(customView: reloadBtnView)
     self.navigationItem.rightBarButtonItem = reloadBtn
     
-    // Stopボタン
+/*    // Stopボタン
     let stopdBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
     stopdBtnView.setBackgroundImage(UIImage(named: "stop"), for: .normal)
     stopdBtnView.addTarget(self, action: #selector(onClickStop), for: .touchUpInside)
     stopBtn = UIBarButtonItem(customView: stopdBtnView)
-    
+*/
     // ProgressViewを作成する.
     progressView = UIProgressView(frame: CGRect(x:0, y:0, width:self.view.bounds.size.width * 2, height:20))
     progressView.progressTintColor = UIColor.green
@@ -132,24 +136,16 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     progressView.layer.position = CGPoint(x:0, y:(self.navigationController?.navigationBar.frame.size.height)!)
     progressView.transform = CGAffineTransform(scaleX: 1.0, y: 2.0)
     self.navigationItem.titleView?.addSubview(progressView)
+
     
     if(self.webView == nil){
-      // 新規WKWebViewを生成
-      webView = WKWebView(frame:CGRect(x:0, y:statusBarHeight+navBarHeight!, width:self.view.bounds.size.width, height:self.view.bounds.size.height-(statusBarHeight+navBarHeight!+40)))
-      showLocalHtml()
+      // 新規UIWebViewを生成
+      webView = UIWebView(frame:CGRect(x:0, y:statusBarHeight+navBarHeight!, width:self.view.bounds.size.width, height:self.view.bounds.size.height-(statusBarHeight+navBarHeight!+40)))
+      showLocalHtml("wordsmenu2Iphone.htm")
     }
-    else {
-      // 既存のWKWebViewを開いた時 検索バーにURLをセット
-      self.searchBar.text = webView.url?.absoluteString
-    }
-    
-    // フリップで進む・戻るを許可
-    webView.allowsBackForwardNavigationGestures = true
-    
-    self.webView.navigationDelegate = self
-    self.webView!.uiDelegate = self
     
     // Viewに貼り付け
+    self.webView.scalesPageToFit = true
     self.view.addSubview(webView)
     
     // WebViewの読み込み状態を監視する
@@ -158,16 +154,15 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
   }
    
   // ローカルHtmlファイルのweb表示プロシージャ
-  func showLocalHtml() {
+  func showLocalHtml(_ url: String) {
     // Documentファルダにあるmenuファイルのフルパスを取得
     let fileManager = FileManager.default
     let documentURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    let menuURL = documentURL.appendingPathComponent("wordsmenu2Iphone.htm")
-    
+    let menuURL = documentURL.appendingPathComponent(url)
     let path = menuURL.path   // String型の Document path
     let url = NSURL(fileURLWithPath: path)
     let urlRequest = NSURLRequest(url: url as URL)
-    self.webView.load(urlRequest as URLRequest)
+    self.webView.loadRequest(urlRequest as URLRequest)
   }
   
 
@@ -181,50 +176,16 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     self.webView.goForward()
   }
   @objc func onClickBookmarkBarButton(sender: UIButton){
-    DownloadFromDropbox()
+    //    DownloadFromDropbox()
   }
+  
   @objc func longPressBookmark(sender: UILongPressGestureRecognizer){
     // 長押し：ブックマーク追加
   }
   
-  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-    // ソフトウェアキーボードの検索ボタンが押された
-    search(urlString: searchBar.text!)
-    // キーボードを閉じる
-    searchBar.resignFirstResponder()
-  }
-  
-  func search( urlString:String)
-  {
-    var urlString = urlString
-    if(urlString == ""){
-      return;
-    }
-    
-    var strUrl: String
-    var searchWord:String = ""
-    let chkURL = urlString.components(separatedBy: ".")
-    if chkURL.count > 1 {
-      // URLの場合
-      if urlString.hasPrefix("http://") || urlString.hasPrefix("https://") {
-      } else {
-        strUrl = "http://"
-        strUrl = strUrl.appending(urlString)
-      }
-    } else {
-      // 検索ワード
-      urlString = urlString.replacingOccurrences(of: "?", with: " ")
-      let words = urlString.components(separatedBy: " ")
-      searchWord = words.joined(separator: "+")
-      urlString = "https://www.google.co.jp/search?&q=\(searchWord)"
-    }
-    
-    let encodedUrlString = urlString.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed)
-    let url = NSURL(string: encodedUrlString!)
-    let request = NSURLRequest(url: url! as URL)
-    self.webView.load(request as URLRequest)
-  }
-  
+ 
+
+/*
   // MARK: - プログレスバーの更新(KVO)
   override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
     if(keyPath == "estimatedProgress"){
@@ -243,7 +204,7 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
           searchBar.text = webView.url?.absoluteString
           
           // タブのサムネイル画像を保存
-//          saveTab(wkWebView:self.webView)  // これを入れると terminating with uncaught exception of type NSException　となってしまう。
+//          saveTab(UIWebView:self.webView)  // これを入れると terminating with uncaught exception of type NSException　となってしまう。
         }
       }
     }
@@ -253,6 +214,7 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     self.webView.navigationDelegate = nil
     self.webView!.uiDelegate = nil
   }
+*/
   
   // ツールバーのタブボタンをタップした時にTabVcに戻る処理
   @objc func onClickTabBarButton(sender: UIButton) {
@@ -264,14 +226,13 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
   
 
   // タブの保存
-  func saveTab(wkWebView:WKWebView){     // この func が呼び出されない。
-    //    self.tabDataList[self.myTabIndexPathRow].webView = wkWebView
+  func saveTab(wkWebView:UIWebView){
     tabDataList[myTabIndexPathRow].webView = wkWebView
     // すぐ実行すると真っ白な画像が撮れる為 少し間を空けてサムネイル画像を保存
-//    Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: Selector(("saveTabImageExec")), userInfo: nil, repeats: false)
+    // Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: Selector(("saveTabImageExec")), userInfo: nil, repeats: false)
 
     saveTabImageExec()
-    Thread.sleep(forTimeInterval: 0.3)
+    Thread.sleep(forTimeInterval: 0.7)
 //    print("Saved WebView")
   }
   
@@ -300,228 +261,145 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
   }
   
   
-  
-  // Dropboxから単語htmlファイルをダウンロードするプロシージャ
-  func DownloadFromDropbox() {
+  @objc func onClickSearchButton () {
     
-    // ログインしていなければ、まずログインする
-    if DropboxClientsManager.authorizedClient == nil {
+    
+    
+    // 検索語を設定
+    let searchWord: String = searchBar.text!
+    
+    if searchWord == nil {
+      print("検索語が入力されていません")
+      return
+    }
+  
+    // 検索結果出力ファイルのHTML文のheader部分
+    let searchHeader: String? = "<html><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"><body bgcolor=\"white\" text=\"black\" link=\"blue\" vlink=\"purple\" alink=\"red\"><table style=\"border-color:purple;\" border=\"1\" width=\"900\" cellpadding=\"2\" cellspacing=\"0\">"
+    
+    var searchResult: String = ""
+ 
+    let queue = DispatchQueue(label: "queue")
+    queue.async{
+      searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/htm1/", type: "<tr>")
+//      self.updateProgressBar(progress: 0.625)
+    }
+    queue.async{
+      searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/htm2/", type: "<tr>")
+    }
+    queue.async{
+      searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/TuVung/", type: "<p>")
+    }
+    queue.async{
+      searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/BaiNghe/", type: "<p>")
+    }
+
+    queue.async{
+      // 検索結果のhtmlを書き出す
+      let searchResultHtml = searchHeader! + searchResult + "</table></html>"
+      let resultFileName = "searchResult.html"
       
-      DropboxClientsManager.authorizeFromController(UIApplication.shared,
-                                                    controller: self,
-                                                    openURL: { (url: URL) -> Void in
-                                                      UIApplication.shared.open(url, options: [:], completionHandler: nil)
-      })
-    } else {
-      
-      
-      // 全ファイルダウンロード
-      let queue = DispatchQueue(label: "queue")
-      
-      queue.async {
-        print("Will download root dir \(Date())")
-        self.downloadAll("/Vietnam/VietmenuIphone/", DocumentDir: "/")
+      // DocumentディレクトリURLを取得し、htmlFileNameを書き出す
+      if let documentDirectoryFileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last {
+        
+        // ディレクトリのパスにファイル名をつなげてファイルのフルパスを作る
+        let targetFilePath = documentDirectoryFileURL.appendingPathComponent(resultFileName)
+        
+        // 書き込み
+        do {
+          try searchResultHtml.write(to: targetFilePath, atomically: true, encoding: String.Encoding.utf8)
+        } catch let error as NSError {
+          print("書き込みエラーが発生しました: \(error)")
+          return
+        }
       }
-      
-      
-      queue.async {
-        print("Will download htm1 \(Date())")
-        self.downloadAll("/Vietnam/Words1/htm1/", DocumentDir: "htm1")
-      }
-      
-      
-      queue.async {
-        print("Will download htm1/images \(Date())")
-        self.downloadAll("/Vietnam/Words1/htm1Images/", DocumentDir: "htm1Images")
-      }
-      
-      
-      queue.async {
-        print("Will download TuVung \(Date())")
-        self.downloadAll("/Vietnam/Words1/TuVung/", DocumentDir: "TuVung")
-      }
-      
-      
-      queue.async {
-        print("Will download htm2 \(Date())")
-        self.downloadAll("/Vietnam/Words2/htm2/", DocumentDir: "htm2")
-      }
-      
-      queue.async {
-        print("Will download BaiNghe \(Date())")
-        self.downloadAll("/Vietnam/Bai Nghe/Words/", DocumentDir: "BaiNghe")
-      }
-      
-      queue.async {
-        print("Will download BaiNghe images\(Date())")
-        self.downloadAll("/Vietnam/Bai Nghe/BaiNgheImages/", DocumentDir: "BaiNgheImages")
-      }
-      
-      
+    }
+    
+    queue.async{
+      print("Will print search result")
+      self.showLocalHtml("searchResult.html")
+ //     let viewController: SearchResult = SearchResult()
+ //     self.navigationController?.pushViewController(viewController, animated: false)
     }
   }
   
-  
-  // Dropboxよりダウンロード
-  func downloadAll(_ DropboxDir: String, DocumentDir: String)  {
+  // 検索の実行
+  func searchWordAction(_ searchWord: String, subDir: String, type: String) -> String {
     
-    // Documentフォルダのパス取得
-    let fileManager = FileManager.default
-    let documentURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    let downloadDataURL = documentURL.appendingPathComponent(DocumentDir)
+    SVProgressHUD.show()
     
-    // Documentディレクトリの対象フォルダ内のファイルをlocalFileListに収容
-    let documentPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-    var localFileList: [String] {
+    // 単語htmlファイルがあるDocumentディレクトリーのパスを取得
+    let currentDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+    
+    // ディレクトリ内の単語htmlファイルをリストアップし、wordFiles[]配列に収納
+    var wordFiles: [String] {
       do {
-        return try fileManager.contentsOfDirectory(atPath: documentPath+"/"+DocumentDir)
+        return try FileManager.default.contentsOfDirectory(atPath: currentDir + subDir)
+        //        return try FileManager.default.contentsOfDirectory(atPath: currentDir + "/htm1/")
       } catch {
-        // 対象フォルダが存在しない（未作成）の場合、フォルダを作成する
-        try! fileManager.createDirectory(at: downloadDataURL, withIntermediateDirectories: true, attributes: nil)
         return []
       }
     }
     
-    // localFileList のコピー(localFileName)を準備
-    var localFileName: [String] = []
+    var searchResult: String = ""
+    var textData: String? // 単語hmtlファイルのテキストデータ
+    var trText: String? // <tr>...</tr>タグに挟まれたデータ
+    var divText: String? // <div>...</tr>タグに挟まれたデータ
     
-    // localFileListに収容されたファイルのタイムスタンプをlocalFileDateリストに収容
-    var localFileDate: [String] = []
-    for idx in 0..<localFileList.count {
+    // 単語htmlファイルがあるDocumentディレクトリーのパスを取得
+    let dirDocument = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first
+    
+    // 配列内のhtmlファイルを順次処理する
+    for i in 0 ..< wordFiles.count {
+      
+      // htmlファイルを順次テキストデータとして読み込む
+      let pathFileName = dirDocument!.appendingPathComponent(subDir + wordFiles[i] )
+      //      let pathFileName = dirDocument!.appendingPathComponent("/htm1/" + wordFiles[i] )
       do {
-        let attribs: NSDictionary =
-          try fileManager.attributesOfItem(atPath: documentPath+"/"+DocumentDir+"/"+localFileList[idx]) as NSDictionary
-        let modDate = attribs["NSFileModificationDate"].debugDescription
-        let modDateStr = modDate.substring(with: modDate.index(modDate.startIndex, offsetBy: 9)..<modDate.index(modDate.startIndex, offsetBy: 28))
-        localFileDate.append(modDateStr)
+        textData = try String(contentsOf: pathFileName, encoding: String.Encoding.utf8 )
+      } catch {
+      }
+      
+      if let doc = try? HTML(html: textData!, encoding: .utf8) {
         
-        //　localFileListのitemがファイルの場合、localFileNameリストに収容
-        let fileType = attribs["NSFileType"].debugDescription
-        let fileTypeStr = fileType.substring(with: fileType.index(fileType.startIndex, offsetBy: 9)..<fileType.index(fileType.startIndex, offsetBy: 26))
-        if fileTypeStr == "NSFileTypeRegular" {
-          print(localFileList[idx])
-          localFileName.append(localFileList[idx])
+        if type == "<tr>" {
+          let body = doc.css("body").first!.toHTML
+          
+          // htmlファイルが検索語を含むかどうか判定
+          if let range = body!.range(of: searchWord){ // -> true
+            
+            // 検索語を含むファイルの処理
+            // <tr>タグごとに検索語をチェック、含んで入ればその<tr>タグのouterHTMLをtargetHtmlに追記する
+            for node in doc.css("tr") {
+              trText = node.toHTML!
+              if let range = trText?.range(of: searchWord) {
+                trText = trText?.replacingOccurrences(of: searchWord, with: "<span style=\"background-color:yellow;\">" + searchWord + "</span>")
+                searchResult = searchResult + trText!
+              } else {
+              }
+            }
+          }else{
+          }
+          
+        } else if type == "<p>" {
+          for node in doc.css("p") {
+            divText = node.toHTML!
+            if let range = divText?.range(of: searchWord) {
+              divText = divText?.replacingOccurrences(of: searchWord, with: "<span style=\"background-color:yellow;\">" + searchWord + "</span>")
+              searchResult = searchResult + "<tr><td colspan=\"4\">" + divText! + "</td></tr>"
+            } else {
+            }
+          }
+          
         }
-        
-        
-      } catch let error {
-        print("Error: \(error.localizedDescription)") }
+      }
     }
     
+    SVProgressHUD.dismiss()
     
-    SVProgressHUD.show()
-    
-    // Dropboxにあるファイルのメタデータ取得
-    var counter: Int = 0
-    var isMoved: Bool = false
-    var hasError = false
-    
-    guard let client = DropboxClientsManager.authorizedClient else {return }
-    client.files.listFolder(path: DropboxDir).response { response, error in
-      
-      if let metadata = response {
-        counter = metadata.entries.count
-        
-        for file in metadata.entries {
-          
-          // ファイルでないアイテムはskipする
-          if !(file is Files.FileMetadata) {
-            counter -= 1
-            print("Found a non-file item: \(file.name)")
-            continue
-          }
-          //          print(file.name)
-          
-          // Dropboxの各ファイルと同じファイルがローカルににあるかチェック
-          if let idx = localFileList.index(of: file.name) {
-            // 同じファイルがローカルにあった場合、localFileNameリストよりremoveする
-            let idxName = localFileName.index(of: file.name)
-            localFileName.remove(at: idxName!)
-            
-            // ファイルの更新日付を取得
-            let txt = file.description
-            let dropboxFileDate = txt.substring(with: txt.index(txt.startIndex, offsetBy: 27)..<txt.index(txt.startIndex, offsetBy: 37)) + " " + txt.substring(with: txt.index(txt.startIndex, offsetBy: 38)..<txt.index(txt.startIndex, offsetBy: 46))
-            //            print("dropboxFileDate: \(dropboxFileDate)")
-            //            print("localFileDate: \(localFileDate[idx])")
-            
-            // ローカルファイルの日付がDropboxにあるファイルの日付より新しい場合は、ダウンロードしない
-            if localFileDate[idx] > dropboxFileDate {
-              counter -= 1
-              //              print("Counter \(counter)")
-              continue
-            }
-          }
-          
-          let downloadFileURL = downloadDataURL.appendingPathComponent(file.name)
-          let destination: (URL, HTTPURLResponse) -> URL = { temporaryURL, response in
-            return downloadFileURL
-          }
-          
-          // ダウンロード
-          client.files.download(path: DropboxDir+file.name, overwrite: true, destination: destination).response { response, error in
-            //            print(file.name)
-            counter -= 1
-            if let response = response {
-              //                print("response: \(response)")
-            } else if let error = error {
-              print("Has Error: \(error)")
-              hasError = true
-              SVProgressHUD.showError(withStatus: error.description)
-            }
-            
-            print("Downloaded \(file.name) \(Date())")
-            
-            if counter <= 0 {
-              isMoved = true
-              print("isMoved 1")
-              //              print("Local unmatched files: \(localFileName)")
-              SVProgressHUD.dismiss()
-            }
-            
-            }  /* client.files.download ().response */
-            
-            .progress { progressData in
-              // print(progressData)
-          }
-          
-        }  /* for file in metadata.entries */
-        
-        if counter <= 0 {
-          isMoved = true
-          print("isMoved 2")
-          //          print("Local unmatched files: \(localFileName)")
-          SVProgressHUD.dismiss()
-        }
-        
-      } else {  /* if let metadata = response */
-        print(error!)
-        SVProgressHUD.showError(withStatus: error!.description)
-      }
-      
-    } /* client.files.listFolder() */
-    
-    
-    repeat {
-      if isMoved == true {
-        
-        // Downloadされたファイルに含まれないローカルファイルをremoveする
-        for file in localFileName {
-          let removeFileURL = downloadDataURL.appendingPathComponent(file)
-          try? fileManager.removeItem(at: removeFileURL)
-          print("Removed: \(file)")
-        }
-        
-        print("Finished downloading from \(DocumentDir) \(Date())\n")
-        return
-      } else {
-        Thread.sleep(forTimeInterval: 0.1)
-      }
-    } while true
+    print("\(subDir) searched")
+    return searchResult
     
   }
-  
-  
-
   
 
   override func didReceiveMemoryWarning() {
@@ -529,115 +407,6 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     // Dispose of any resources that can be recreated.
   }
   
-
-  
-  /*
-   override func viewDidLoad() {
-   super.viewDidLoad()
-   
-   // WKWebViewを生成
-   webView = WKWebView(frame:CGRect(x:0, y:0, width:self.view.bounds.size.width, height:self.view.bounds.size.height - 40))
-   
-   // フリップで進む・戻るを許可
-   webView.allowsBackForwardNavigationGestures = true
-   
-   // Googleを表示
-   let urlString = "http://www.google.com"
-   let encodedUrlString = urlString.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed)
-   
-   let url = NSURL(string: encodedUrlString!)
-   let request = NSURLRequest(url: url! as URL)
-   webView.load(request as URLRequest)
-   
-   // Viewに貼り付け
-   self.view.addSubview(webView)
-   
-   
-   // ツールバー
-   let toolbar = UIToolbar(frame: CGRect(x:0, y:self.view.bounds.size.height - 44, width:self.view.bounds.size.width, height:40.0))
-   toolbar.layer.position = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height-20.0)
-   toolbar.barStyle = .default
-   toolbar.tintColor = UIColor.white
-   
-   // 戻るボタン
-   let backBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
-   backBtnView.setBackgroundImage(UIImage(named: "back"), for: .normal)
-   backBtnView.addTarget(self, action: #selector(onClickBackBarButton), for: .touchUpInside)
-   let backBtn = UIBarButtonItem(customView: backBtnView)
-   
-   // 進むボタン
-   let forwardBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
-   forwardBtnView.setBackgroundImage(UIImage(named: "forward"), for: .normal)
-   forwardBtnView.addTarget(self, action: #selector(onClickForwardBarButton), for: .touchUpInside)
-   let forwardBtn = UIBarButtonItem(customView: forwardBtnView)
-   
-   // ブックマークボタン
-   let bookmarkBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
-   bookmarkBtnView.setBackgroundImage(UIImage(named: "bookmark"), for: .normal)
-   bookmarkBtnView.addTarget(self, action: #selector(onClickBookmarkBarButton), for: .touchUpInside)
-   let bookmarkBtn = UIBarButtonItem(customView: bookmarkBtnView)
-   
-   // ブックマークボタン長押しのジェスチャー
-   let bookmarkLongPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressBookmark))
-   bookmarkLongPressGesture.minimumPressDuration = 1.0// 長押し-最低1秒間は長押しする.
-   bookmarkLongPressGesture.allowableMovement = 150// 長押し-指のズレは15pxまで.
-   bookmarkBtnView.addGestureRecognizer(bookmarkLongPressGesture)
-   
-   // タブボタン
-   let tabBtnView = UIButton(frame: CGRect(x:0, y:0, width:12, height:12))
-   tabBtnView.setBackgroundImage(UIImage(named: "tab"), for: .normal)
-   tabBtnView.addTarget(self, action: #selector(onClickTabBarButton), for: .touchUpInside)
-   let tabBtn = UIBarButtonItem(customView: tabBtnView)
-   
-   // スペーサー
-   let flexibleItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
-   
-   // ツールバーに追加する.
-   toolbar.items = [backBtn, flexibleItem, forwardBtn, flexibleItem, bookmarkBtn, flexibleItem, tabBtn]
-   self.view.addSubview(toolbar)
-   
-   
-   // 検索バーを作成する.
-   searchBar = UISearchBar(frame:CGRect(x:0, y:0, width:270, height:80))
-   searchBar.delegate = self
-   searchBar.layer.position = CGPoint(x: self.view.bounds.width/2, y: 20)
-   searchBar.searchBarStyle = UISearchBarStyle.minimal
-   searchBar.placeholder = "URLまたは検索ワード"
-   searchBar.tintColor = UIColor.cyan
-   // 余計なボタンは非表示にする.
-   searchBar.showsSearchResultsButton = false
-   searchBar.showsCancelButton = false
-   searchBar.showsBookmarkButton = false
-   
-   // UINavigationBar上に、UISearchBarを追加
-   self.navigationItem.titleView = searchBar
-   
-   // Reloadボタン
-   let reloadBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
-   reloadBtnView.setBackgroundImage(UIImage(named: "reload"), for: .normal)
-   reloadBtnView.addTarget(self, action: #selector(onClickReload), for: .touchUpInside)
-   reloadBtn = UIBarButtonItem(customView: reloadBtnView)
-   self.navigationItem.rightBarButtonItem = reloadBtn
-   
-   // Stopボタン
-   let stopdBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
-   stopdBtnView.setBackgroundImage(UIImage(named: "stop"), for: .normal)
-   stopdBtnView.addTarget(self, action: #selector(onClickStop), for: .touchUpInside)
-   stopBtn = UIBarButtonItem(customView: stopdBtnView)
-   
-   // ProgressViewを作成する.
-   progressView = UIProgressView(frame: CGRect(x:0, y:0, width:self.view.bounds.size.width * 2, height:20))
-   progressView.progressTintColor = UIColor.green
-   progressView.trackTintColor = UIColor.white
-   progressView.layer.position = CGPoint(x:0, y:(self.navigationController?.navigationBar.frame.size.height)!)
-   progressView.transform = CGAffineTransform(scaleX: 1.0, y: 2.0)
-   self.navigationItem.titleView?.addSubview(progressView)
-   
-   // WebViewの読み込み状態を監視する
-   self.webView.addObserver(self, forKeyPath:"estimatedProgress", options:.new, context:nil)
-   
-   }
-   */
   
 }
 
