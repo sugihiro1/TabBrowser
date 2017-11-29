@@ -27,7 +27,10 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
   private var stopBtn:UIBarButtonItem!
   private var progressView: UIProgressView!
   
-//  let navigationController: UINavigationController
+  var timer = Timer()
+  var progress: Float = 0.5
+  var searchFihished: Bool = false
+  
   
   weak var delegate: AnyObject?
   
@@ -123,12 +126,6 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     reloadBtn = UIBarButtonItem(customView: reloadBtnView)
     self.navigationItem.rightBarButtonItem = reloadBtn
     
-/*    // Stopボタン
-    let stopdBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
-    stopdBtnView.setBackgroundImage(UIImage(named: "stop"), for: .normal)
-    stopdBtnView.addTarget(self, action: #selector(onClickStop), for: .touchUpInside)
-    stopBtn = UIBarButtonItem(customView: stopdBtnView)
-*/
     // ProgressViewを作成する.
     progressView = UIProgressView(frame: CGRect(x:0, y:0, width:self.view.bounds.size.width * 2, height:20))
     progressView.progressTintColor = UIColor.green
@@ -136,7 +133,6 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     progressView.layer.position = CGPoint(x:0, y:(self.navigationController?.navigationBar.frame.size.height)!)
     progressView.transform = CGAffineTransform(scaleX: 1.0, y: 2.0)
     self.navigationItem.titleView?.addSubview(progressView)
-
     
     if(self.webView == nil){
       // 新規UIWebViewを生成
@@ -147,12 +143,12 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     // Viewに貼り付け
     self.webView.scalesPageToFit = true
     self.view.addSubview(webView)
-    
-    // WebViewの読み込み状態を監視する
+
+/*   // WebViewの読み込み状態を監視する
     self.webView.addObserver(self, forKeyPath:"estimatedProgress", options:.new, context:nil)
-    
+*/
   }
-   
+  
   // ローカルHtmlファイルのweb表示プロシージャ
   func showLocalHtml(_ url: String) {
     // Documentファルダにあるmenuファイルのフルパスを取得
@@ -164,9 +160,7 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     let urlRequest = NSURLRequest(url: url as URL)
     self.webView.loadRequest(urlRequest as URLRequest)
   }
-  
 
-  
   @objc func onClickBackBarButton(sender: UIButton){
     // 前のページ
     self.webView.goBack()
@@ -176,64 +170,25 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     self.webView.goForward()
   }
   @objc func onClickBookmarkBarButton(sender: UIButton){
-    //    DownloadFromDropbox()
   }
   
   @objc func longPressBookmark(sender: UILongPressGestureRecognizer){
     // 長押し：ブックマーク追加
   }
   
- 
-
-/*
-  // MARK: - プログレスバーの更新(KVO)
-  override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-    if(keyPath == "estimatedProgress"){
-      let progress : Float = Float(webView.estimatedProgress)
-      if(progressView != nil){
-        // プログレスバーの更新
-        if(progress < 1.0){
-          progressView.setProgress(progress, animated: true)
-          UIApplication.shared.isNetworkActivityIndicatorVisible = true
-          self.navigationItem.rightBarButtonItem = stopBtn
-        }else{
-          // 読み込み完了
-          progressView.setProgress(0.0, animated: false)
-          UIApplication.shared.isNetworkActivityIndicatorVisible = false
-          self.navigationItem.rightBarButtonItem = reloadBtn
-          searchBar.text = webView.url?.absoluteString
-          
-          // タブのサムネイル画像を保存
-//          saveTab(UIWebView:self.webView)  // これを入れると terminating with uncaught exception of type NSException　となってしまう。
-        }
-      }
-    }
-  }
-  deinit {
-    self.webView?.removeObserver(self, forKeyPath: "estimatedProgress")
-    self.webView.navigationDelegate = nil
-    self.webView!.uiDelegate = nil
-  }
-*/
-  
   // ツールバーのタブボタンをタップした時にTabVcに戻る処理
   @objc func onClickTabBarButton(sender: UIButton) {
     tabDataList[myTabIndexPathRow].webView = self.webView
     saveTab(wkWebView:self.webView)
-    print("タブボタン タップ \(tabDataList[myTabIndexPathRow].webView)")
     navigationController?.popToViewController(navigationController!.viewControllers[0], animated: false)
   }
   
-
   // タブの保存
   func saveTab(wkWebView:UIWebView){
     tabDataList[myTabIndexPathRow].webView = wkWebView
     // すぐ実行すると真っ白な画像が撮れる為 少し間を空けてサムネイル画像を保存
-    // Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: Selector(("saveTabImageExec")), userInfo: nil, repeats: false)
-
     saveTabImageExec()
     Thread.sleep(forTimeInterval: 0.7)
-//    print("Saved WebView")
   }
   
   func saveTabImageExec(){
@@ -260,28 +215,53 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     self.webView.stopLoading()
   }
   
+  @objc func setProgressBar() {
+    if progress >= 1 {
+      self.timer.invalidate()
+      self.progress = 0.5
+      progressView.setProgress(progress, animated: false)
+      return
+    }
+
+    if searchFihished == true {
+      progress += 0.01
+      print("progress \(progress)")
+      self.progressView.setProgress(1.0, animated: true)
+    }
+    else {
+      progress += 0.001
+      print("progress \(progress)")
+      progressView.setProgress(progress, animated: false)
+    }
+  }
+  
   
   @objc func onClickSearchButton () {
     
-    
+    // キーボードを閉じる
+    searchBar.resignFirstResponder()
     
     // 検索語を設定
     let searchWord: String = searchBar.text!
     
-    if searchWord == nil {
+    print(searchWord.count)
+    if searchWord.count == 0 {
       print("検索語が入力されていません")
       return
     }
-  
+
+    var searchResult: String = ""
+    searchFihished = false
+
     // 検索結果出力ファイルのHTML文のheader部分
     let searchHeader: String? = "<html><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"><body bgcolor=\"white\" text=\"black\" link=\"blue\" vlink=\"purple\" alink=\"red\"><table style=\"border-color:purple;\" border=\"1\" width=\"900\" cellpadding=\"2\" cellspacing=\"0\">"
     
-    var searchResult: String = ""
- 
+    timer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(setProgressBar), userInfo: nil, repeats: true)
+    
     let queue = DispatchQueue(label: "queue")
+    
     queue.async{
       searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/htm1/", type: "<tr>")
-//      self.updateProgressBar(progress: 0.625)
     }
     queue.async{
       searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/htm2/", type: "<tr>")
@@ -315,17 +295,16 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     }
     
     queue.async{
-      print("Will print search result")
       self.showLocalHtml("searchResult.html")
- //     let viewController: SearchResult = SearchResult()
- //     self.navigationController?.pushViewController(viewController, animated: false)
+      self.searchFihished = true
     }
+
   }
   
   // 検索の実行
   func searchWordAction(_ searchWord: String, subDir: String, type: String) -> String {
     
-    SVProgressHUD.show()
+ //    SVProgressHUD.show()
     
     // 単語htmlファイルがあるDocumentディレクトリーのパスを取得
     let currentDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
@@ -394,7 +373,7 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
       }
     }
     
-    SVProgressHUD.dismiss()
+ //   SVProgressHUD.dismiss()
     
     print("\(subDir) searched")
     return searchResult

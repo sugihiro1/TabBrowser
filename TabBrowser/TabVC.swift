@@ -55,7 +55,7 @@ class TabVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSou
     let addBarButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(onClickAddBarButton))
     self.navigationItem.setLeftBarButton(addBarButton, animated: true)
 
-    let downloadButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(onClickDownloadButton))
+    let downloadButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.organize, target: self, action: #selector(onClickDownloadButton))
     self.navigationItem.setRightBarButton(downloadButton, animated: true)
     
     self.createNewTab()
