@@ -169,7 +169,17 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     // 次のページ
     self.webView.goForward()
   }
+  
   @objc func onClickBookmarkBarButton(sender: UIButton){
+/*    if webView.canGoBack == true {
+      self.webView.goBack()
+    }
+    while webView.canGoBack == true {
+      print(webView.canGoBack)
+      self.webView.goBack()
+    } */
+    
+    showLocalHtml("wordsmenu2Iphone.htm")
   }
   
   @objc func longPressBookmark(sender: UILongPressGestureRecognizer){
@@ -179,30 +189,23 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
   // ツールバーのタブボタンをタップした時にTabVcに戻る処理
   @objc func onClickTabBarButton(sender: UIButton) {
     tabDataList[myTabIndexPathRow].webView = self.webView
-    saveTab(wkWebView:self.webView)
+    saveTabImageExec()
+    // すぐ実行すると真っ白な画像が撮れる為 少し間を空けてサムネイル画像を保存
+    Thread.sleep(forTimeInterval: 0.7)
     navigationController?.popToViewController(navigationController!.viewControllers[0], animated: false)
   }
   
-  // タブの保存
-  func saveTab(wkWebView:UIWebView){
-    tabDataList[myTabIndexPathRow].webView = wkWebView
-    // すぐ実行すると真っ白な画像が撮れる為 少し間を空けてサムネイル画像を保存
-    saveTabImageExec()
-    Thread.sleep(forTimeInterval: 0.7)
-  }
-  
+  // タブのタイトルとイメージを保存
   func saveTabImageExec(){
-
-    let queue = DispatchQueue(label: "queue")
-    queue.async{
-      let webView = tabDataList[myTabIndexPathRow].webView
-      UIGraphicsBeginImageContextWithOptions(webView!.bounds.size, true, 0);
-      webView!.drawHierarchy(in:webView!.bounds, afterScreenUpdates: false);
-      let snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
-      UIGraphicsEndImageContext();
-      tabDataList[myTabIndexPathRow].image = snapshotImage
-    }
- 
+    let webView = tabDataList[myTabIndexPathRow].webView
+    let title = webView!.stringByEvaluatingJavaScript(from: "document.title")
+    tabDataList[myTabIndexPathRow].title = title
+    
+    UIGraphicsBeginImageContextWithOptions(webView!.bounds.size, true, 0);
+    webView!.drawHierarchy(in:webView!.bounds, afterScreenUpdates: false);
+    let snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    tabDataList[myTabIndexPathRow].image = snapshotImage
   }
 
   @objc func onClickReload(sender : UIButton){
@@ -225,12 +228,12 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
 
     if searchFihished == true {
       progress += 0.01
-      print("progress \(progress)")
+//      print("progress \(progress)")
       self.progressView.setProgress(1.0, animated: true)
     }
     else {
       progress += 0.001
-      print("progress \(progress)")
+//      print("progress \(progress)")
       progressView.setProgress(progress, animated: false)
     }
   }
@@ -332,7 +335,7 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
       
       // htmlファイルを順次テキストデータとして読み込む
       let pathFileName = dirDocument!.appendingPathComponent(subDir + wordFiles[i] )
-      //      let pathFileName = dirDocument!.appendingPathComponent("/htm1/" + wordFiles[i] )
+//      print("pathFileName \(pathFileName)")
       do {
         textData = try String(contentsOf: pathFileName, encoding: String.Encoding.utf8 )
       } catch {

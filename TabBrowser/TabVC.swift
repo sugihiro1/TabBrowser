@@ -17,6 +17,7 @@ class TabData
 {
   var webView:UIWebView!
   var image:UIImage!
+  var title:String!
   
   deinit{
     webView = nil
@@ -30,9 +31,7 @@ var myTabIndexPathRow : Int = 0
 class TabVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
   
   var collectionView : UICollectionView!
-//  var tabDataList:[TabData] = []
-//  var myTabIndexPathRow : Int = 0
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -84,8 +83,9 @@ class TabVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSou
     let textView = UITextView(frame: CGRect(x:0,y:10,width:cell.frame.width,height:50))
     if(tabDataList[indexPath.row].webView != nil){
 //      textView.text = tabDataList[indexPath.row].webView.title
+      textView.text = tabDataList[indexPath.row].title
     }
-    textView.font = UIFont.systemFont(ofSize: CGFloat(10))
+    textView.font = UIFont.systemFont(ofSize: CGFloat(12))
     textView.backgroundColor = UIColor.clear
     textView.textColor = UIColor.white
     textView.textAlignment = NSTextAlignment.center
@@ -255,7 +255,7 @@ class TabVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSou
         let fileType = attribs["NSFileType"].debugDescription
         let fileTypeStr = fileType.substring(with: fileType.index(fileType.startIndex, offsetBy: 9)..<fileType.index(fileType.startIndex, offsetBy: 26))
         if fileTypeStr == "NSFileTypeRegular" {
-          print(localFileList[idx])
+//          print(localFileList[idx])
           localFileName.append(localFileList[idx])
         }
         
