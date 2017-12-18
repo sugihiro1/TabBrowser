@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="y5C-HP-kne">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="y5C-HP-kne">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Vietnam2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="TabBrowser" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -46,7 +45,7 @@
         <!--Search Word-->
         <scene sceneID="pht-MM-MiX">
             <objects>
-                <viewController id="5X3-Q5-EKq" customClass="SearchWord" customModule="Vietnam2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="5X3-Q5-EKq" customClass="SearchWord" customModule="TabBrowser" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="HjR-u3-LHX"/>
                         <viewControllerLayoutGuide type="bottom" id="gwN-Z9-gKV"/>
@@ -54,44 +53,7 @@
                     <view key="view" contentMode="scaleToFill" id="7WT-kv-TzP" customClass="SeachWord">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="🇯🇵🇻🇳🇺🇸" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kSM-G4-BgD">
-                                <rect key="frame" x="61" y="134" width="200" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="1Ov-PX-W6Y"/>
-                                    <constraint firstAttribute="width" constant="200" id="XHj-WY-ycn"/>
-                                </constraints>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aNh-eP-Yee">
-                                <rect key="frame" x="269" y="134" width="41" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="検索"/>
-                                <connections>
-                                    <action selector="searchWord:" destination="5X3-Q5-EKq" eventType="touchUpInside" id="YjA-wp-CfR"/>
-                                    <segue destination="JuZ-xC-VgD" kind="show" id="f90-hX-9EE"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MJ0-lb-UXL">
-                                <rect key="frame" x="122" y="443" width="131" height="30"/>
-                                <state key="normal" title="Dropbox Download"/>
-                                <connections>
-                                    <action selector="DownloadFromDropbox:" destination="5X3-Q5-EKq" eventType="touchUpInside" id="rTM-G5-6uz"/>
-                                </connections>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="kSM-G4-BgD" firstAttribute="top" secondItem="HjR-u3-LHX" secondAttribute="bottom" constant="70" id="BCa-F0-62a"/>
-                            <constraint firstItem="MJ0-lb-UXL" firstAttribute="centerX" secondItem="7WT-kv-TzP" secondAttribute="centerX" id="FHh-kM-dCQ"/>
-                            <constraint firstItem="gwN-Z9-gKV" firstAttribute="top" secondItem="MJ0-lb-UXL" secondAttribute="bottom" constant="150" id="FTY-0X-YP5"/>
-                            <constraint firstItem="aNh-eP-Yee" firstAttribute="leading" secondItem="kSM-G4-BgD" secondAttribute="trailing" constant="8" symbolic="YES" id="Rt4-Ux-6aD"/>
-                            <constraint firstItem="kSM-G4-BgD" firstAttribute="top" secondItem="aNh-eP-Yee" secondAttribute="top" id="Xgt-mR-Flh"/>
-                            <constraint firstItem="kSM-G4-BgD" firstAttribute="bottom" secondItem="aNh-eP-Yee" secondAttribute="bottom" id="mRq-ME-kMA"/>
-                            <constraint firstItem="kSM-G4-BgD" firstAttribute="leading" secondItem="7WT-kv-TzP" secondAttribute="leadingMargin" constant="45" id="px3-2q-Utf"/>
-                        </constraints>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="S3Q-bj-3lF">
@@ -102,9 +64,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <connections>
-                        <outlet property="searchWordUnicode" destination="kSM-G4-BgD" id="N2B-UW-bHu"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Lv-7Q-iSR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -113,7 +72,7 @@
         <!--Search Result-->
         <scene sceneID="nLN-bL-Zse">
             <objects>
-                <viewController id="JuZ-xC-VgD" customClass="SearchResult" customModule="Vietnam2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="JuZ-xC-VgD" customClass="SearchResult" customModule="TabBrowser" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zWr-4Q-ocZ"/>
                         <viewControllerLayoutGuide type="bottom" id="qz5-jc-wSa"/>
@@ -147,7 +106,4 @@
             <point key="canvasLocation" x="-663.20000000000005" y="166.8665667166417"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="4Jp-MG-Cfi"/>
-    </inferredMetricsTieBreakers>
 </document>

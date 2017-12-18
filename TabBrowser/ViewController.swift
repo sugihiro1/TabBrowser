@@ -44,7 +44,6 @@ class ViewController: UIViewController, WKUIDelegate, UIWebViewDelegate {
     // Documentファルダにあるmenuファイルのフルパスを取得
     let fileManager = FileManager.default
     let documentURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-//    let dataURL = documentURL.appendingPathComponent("Data")
     let menuURL = documentURL.appendingPathComponent("wordsmenu2Iphone.htm")
     
     let path = menuURL.path   // String型の Document path

@@ -64,25 +64,33 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     let toolbar = UIToolbar(frame: CGRect(x:0, y:self.view.bounds.size.height - 44, width:self.view.bounds.size.width, height:40.0))
     toolbar.layer.position = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height-20.0)
     toolbar.barStyle = .default
-    toolbar.tintColor = UIColor.white
-    
+    toolbar.barTintColor = UIColor.white
+//    toolbar.barTintColor = UIColor(red: 0.99, green: 0.99, blue: 0.99, alpha: 1.0)
+//    toolbar.barTintColor = UIColor(white: 1.2, alpha: 1.0)
+
     // 戻るボタン
-    let backBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
-    backBtnView.setBackgroundImage(UIImage(named: "back"), for: .normal)
+    let backBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:18))
+    backBtnView.setBackgroundImage(UIImage(named: "back3"), for: .normal)
     backBtnView.addTarget(self, action: #selector(onClickBackBarButton), for: .touchUpInside)
     let backBtn = UIBarButtonItem(customView: backBtnView)
     
     // 進むボタン
-    let forwardBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
-    forwardBtnView.setBackgroundImage(UIImage(named: "forward"), for: .normal)
+    let forwardBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:18))
+    forwardBtnView.setBackgroundImage(UIImage(named: "forward3"), for: .normal)
     forwardBtnView.addTarget(self, action: #selector(onClickForwardBarButton), for: .touchUpInside)
     let forwardBtn = UIBarButtonItem(customView: forwardBtnView)
     
     // ブックマークボタン
-    let bookmarkBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
-    bookmarkBtnView.setBackgroundImage(UIImage(named: "bookmark"), for: .normal)
+    let bookmarkBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:18))
+    bookmarkBtnView.setBackgroundImage(UIImage(named: "home"), for: .normal)
     bookmarkBtnView.addTarget(self, action: #selector(onClickBookmarkBarButton), for: .touchUpInside)
     let bookmarkBtn = UIBarButtonItem(customView: bookmarkBtnView)
+    
+    // メニューボタン
+    let menuBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:18))
+    menuBtnView.setBackgroundImage(UIImage(named: "menu"), for: .normal)
+    menuBtnView.addTarget(self, action: #selector(onClickBookmarkBarButton), for: .touchUpInside)
+    let menuBtn = UIBarButtonItem(customView: menuBtnView)
     
     // ブックマークボタン長押しのジェスチャー
     let bookmarkLongPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressBookmark))
@@ -91,8 +99,8 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     bookmarkBtnView.addGestureRecognizer(bookmarkLongPressGesture)
     
     // タブボタン
-    let tabBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
-    tabBtnView.setBackgroundImage(UIImage(named: "tab"), for: .normal)
+    let tabBtnView = UIButton(frame: CGRect(x:0, y:0, width:10, height:18))
+    tabBtnView.setBackgroundImage(UIImage(named: "tab3"), for: .normal)
     tabBtnView.addTarget(self, action: #selector(onClickTabBarButton), for: .touchUpInside)
     let tabBtn = UIBarButtonItem(customView: tabBtnView)
     
@@ -100,13 +108,13 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     let flexibleItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
     
     // ツールバーに追加する.
-    toolbar.items = [backBtn, flexibleItem, forwardBtn, flexibleItem, bookmarkBtn, flexibleItem, tabBtn]
+    toolbar.items = [backBtn, flexibleItem, forwardBtn, flexibleItem, bookmarkBtn, flexibleItem, menuBtn, flexibleItem, tabBtn]
     self.view.addSubview(toolbar)
     
     // 検索バーを作成する.
     searchBar = UISearchBar(frame:CGRect(x:0, y:0, width:270, height:80))
     searchBar.delegate = self
-    searchBar.layer.position = CGPoint(x: self.view.bounds.width/2, y: 20)
+    searchBar.layer.position = CGPoint(x: self.view.bounds.width/2, y: 10)
     searchBar.searchBarStyle = UISearchBarStyle.minimal
     searchBar.placeholder = "検索ワード"
     searchBar.tintColor = UIColor.cyan
