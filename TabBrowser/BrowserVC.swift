@@ -11,6 +11,7 @@ import WebKit
 import Kanna
 import SwiftyDropbox
 import SVProgressHUD
+import SlideMenuControllerSwift
 
 @objc protocol BrowserVcDelegate {
   // デリゲートメソッド定義
@@ -23,7 +24,8 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
  
   private var webView: UIWebView!
   private var searchBar:UISearchBar!
-  private var reloadBtn:UIBarButtonItem!
+  private var searchBtn:UIBarButtonItem!
+  private var leftMenuBtn:UIBarButtonItem!
   private var stopBtn:UIBarButtonItem!
   private var progressView: UIProgressView!
   
@@ -86,12 +88,6 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     bookmarkBtnView.addTarget(self, action: #selector(onClickBookmarkBarButton), for: .touchUpInside)
     let bookmarkBtn = UIBarButtonItem(customView: bookmarkBtnView)
     
-    // メニューボタン
-    let menuBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:18))
-    menuBtnView.setBackgroundImage(UIImage(named: "menu"), for: .normal)
-    menuBtnView.addTarget(self, action: #selector(onClickBookmarkBarButton), for: .touchUpInside)
-    let menuBtn = UIBarButtonItem(customView: menuBtnView)
-    
     // ブックマークボタン長押しのジェスチャー
     let bookmarkLongPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressBookmark))
     bookmarkLongPressGesture.minimumPressDuration = 1.0// 長押し-最低1秒間は長押しする.
@@ -103,6 +99,12 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     tabBtnView.setBackgroundImage(UIImage(named: "tab3"), for: .normal)
     tabBtnView.addTarget(self, action: #selector(onClickTabBarButton), for: .touchUpInside)
     let tabBtn = UIBarButtonItem(customView: tabBtnView)
+    
+    // メニューボタン
+    let menuBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:18))
+    menuBtnView.setBackgroundImage(UIImage(named: "menu"), for: .normal)
+    menuBtnView.addTarget(self, action: #selector(onClickSearchMenuBarButton), for: .touchUpInside)
+    let menuBtn = UIBarButtonItem(customView: menuBtnView)
     
     // スペーサー
     let flexibleItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
@@ -122,19 +124,26 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     searchBar.showsSearchResultsButton = false
     searchBar.showsCancelButton = false
     searchBar.showsBookmarkButton = false
-    
     // UINavigationBar上に、UISearchBarを追加
     self.navigationItem.titleView = searchBar
     
     // 検索ボタン
-    let reloadBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
-    reloadBtnView.setTitle("検索", for: .normal)
-    reloadBtnView.setTitleColor(UIColor.blue, for: .normal)
-    reloadBtnView.addTarget(self, action: #selector(onClickSearchButton), for: .touchUpInside)
-    reloadBtn = UIBarButtonItem(customView: reloadBtnView)
-    self.navigationItem.rightBarButtonItem = reloadBtn
+    let searchBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
+    searchBtnView.setTitle("検索", for: .normal)
+    searchBtnView.setTitleColor(UIColor.blue, for: .normal)
+    searchBtnView.addTarget(self, action: #selector(onClickSearchButton), for: .touchUpInside)
+    searchBtn = UIBarButtonItem(customView: searchBtnView)
+    self.navigationItem.rightBarButtonItem = searchBtn
     
-    // ProgressViewを作成する.
+    // 左メニューボタン
+    let leftMenuBtnView = UIButton(frame: CGRect(x:0, y:0, width:24, height:24))
+    leftMenuBtnView.setTitle("＜", for: .normal)
+    leftMenuBtnView.setTitleColor(UIColor.blue, for: .normal)
+    leftMenuBtnView.addTarget(self, action: #selector(onClickLeftMenuBarButton), for: .touchUpInside)
+    leftMenuBtn = UIBarButtonItem(customView: leftMenuBtnView)
+    self.navigationItem.leftBarButtonItem = leftMenuBtn
+    
+   // ProgressViewを作成する.
     progressView = UIProgressView(frame: CGRect(x:0, y:0, width:self.view.bounds.size.width * 2, height:20))
     progressView.progressTintColor = UIColor.green
     progressView.trackTintColor = UIColor.white
@@ -179,27 +188,28 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
   }
   
   @objc func onClickBookmarkBarButton(sender: UIButton){
-/*    if webView.canGoBack == true {
-      self.webView.goBack()
-    }
-    while webView.canGoBack == true {
-      print(webView.canGoBack)
-      self.webView.goBack()
-    } */
-    
     showLocalHtml("wordsmenu2Iphone.htm")
   }
-  
+ 
+  @objc func onClickSearchMenuBarButton (sender: UIButton){
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let searchViewController = storyboard.instantiateViewController(withIdentifier: "Search")
+    self.present(searchViewController,animated: false, completion: nil)
+//    self.navigationController?.pushViewController(searchViewController, animated: false)
+ 
+//    self.slideMenuController()?.openRight()
+  }
+
   @objc func longPressBookmark(sender: UILongPressGestureRecognizer){
     // 長押し：ブックマーク追加
   }
   
-  // ツールバーのタブボタンをタップした時にTabVcに戻る処理
+  // タブボタンをタップした時にTabVcに移る処理
   @objc func onClickTabBarButton(sender: UIButton) {
     tabDataList[myTabIndexPathRow].webView = self.webView
     saveTabImageExec()
     // すぐ実行すると真っ白な画像が撮れる為 少し間を空けてサムネイル画像を保存
-    Thread.sleep(forTimeInterval: 0.7)
+    Thread.sleep(forTimeInterval: 0.3)
     navigationController?.popToViewController(navigationController!.viewControllers[0], animated: false)
   }
   
@@ -247,6 +257,10 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
   }
   
   
+  @objc func onClickLeftMenuBarButton(sender: UIButton){
+    self.slideMenuController()?.openLeft()
+  }
+
   @objc func onClickSearchButton () {
     
     // キーボードを閉じる
@@ -272,16 +286,24 @@ class BrowserVC: UIViewController, UISearchBarDelegate, WKNavigationDelegate, WK
     let queue = DispatchQueue(label: "queue")
     
     queue.async{
-      searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/htm1/", type: "<tr>")
+      if swIsOnArray0[0] == true {
+        searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/htm1/", type: "<tr>")
+      }
     }
     queue.async{
-      searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/htm2/", type: "<tr>")
+      if swIsOnArray0[1] == true {
+        searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/htm2/", type: "<tr>")
+      }
     }
     queue.async{
-      searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/TuVung/", type: "<p>")
+      if swIsOnArray0[2] == true {
+        searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/TuVung/", type: "<p>")
+      }
     }
     queue.async{
-      searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/BaiNghe/", type: "<p>")
+      if swIsOnArray0[3] == true {
+        searchResult = searchResult + self.searchWordAction(searchWord, subDir: "/BaiNghe/", type: "<p>")
+      }
     }
 
     queue.async{

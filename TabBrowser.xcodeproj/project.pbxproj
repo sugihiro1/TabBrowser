@@ -15,6 +15,8 @@
 		9B3C86041FB91B900005113A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3C86031FB91B8E0005113A /* AppDelegate.swift */; };
 		9B3C86061FB937A20005113A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B3C86051FB937A20005113A /* Main.storyboard */; };
 		9B3C86081FB9383E0005113A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3C86071FB9383E0005113A /* ViewController.swift */; };
+		9BF27D5F1FEB84AD00E2CD41 /* LeftMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF27D5E1FEB84AD00E2CD41 /* LeftMenuController.swift */; };
+		9BF27D831FEF8CCA00E2CD41 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF27D821FEF8CCA00E2CD41 /* SearchViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +31,8 @@
 		9B3C86031FB91B8E0005113A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9B3C86051FB937A20005113A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		9B3C86071FB9383E0005113A /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9BF27D5E1FEB84AD00E2CD41 /* LeftMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftMenuController.swift; sourceTree = "<group>"; };
+		9BF27D821FEF8CCA00E2CD41 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		ADA70122FF9DF679E50E0FF5 /* Pods_TabBrowser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TabBrowser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -77,6 +81,8 @@
 				9B3C86031FB91B8E0005113A /* AppDelegate.swift */,
 				9B2646B81FB0606F008CEDC5 /* TabVC.swift */,
 				9B2646B61FB01543008CEDC5 /* BrowserVC.swift */,
+				9BF27D5E1FEB84AD00E2CD41 /* LeftMenuController.swift */,
+				9BF27D821FEF8CCA00E2CD41 /* SearchViewController.swift */,
 				9B3C86051FB937A20005113A /* Main.storyboard */,
 				9B3C86071FB9383E0005113A /* ViewController.swift */,
 				9B2646AB1FB0138A008CEDC5 /* Assets.xcassets */,
@@ -217,9 +223,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BF27D831FEF8CCA00E2CD41 /* SearchViewController.swift in Sources */,
 				9B2646B91FB0606F008CEDC5 /* TabVC.swift in Sources */,
 				9B3C86041FB91B900005113A /* AppDelegate.swift in Sources */,
 				9B3C86081FB9383E0005113A /* ViewController.swift in Sources */,
+				9BF27D5F1FEB84AD00E2CD41 /* LeftMenuController.swift in Sources */,
 				9B2646B71FB01543008CEDC5 /* BrowserVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,7 +8,7 @@
 
 import UIKit
 import SwiftyDropbox
-
+import SlideMenuControllerSwift
 
 
 @UIApplicationMain
@@ -19,16 +19,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
- 
+    
     DropboxClientsManager.setupWithAppKey("8yhy6e69tiewf1c")
-    
+
+/*
     let viewController: TabVC = TabVC()
-    navigationController = UINavigationController(rootViewController: viewController)
-    
+    let navigationController = UINavigationController(rootViewController: viewController)
     self.window = UIWindow(frame: UIScreen.main.bounds)
     self.window?.rootViewController = navigationController
     self.window?.makeKeyAndVisible()
+*/
+
+    SlideMenuOptions.leftViewWidth = 300
+    SlideMenuOptions.rightViewWidth = 450
+    SlideMenuOptions.contentViewScale = 1.0
+    SlideMenuOptions.contentViewDrag = true
+    SlideMenuOptions.shadowOpacity = 100 
     
+    let viewController: TabVC = TabVC()
+    let navigationController = UINavigationController(rootViewController: viewController)
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let leftViewController = storyboard.instantiateViewController(withIdentifier: "Left")
+    let rightViewController = storyboard.instantiateViewController(withIdentifier: "Right")
+   let slideMenuController = SlideMenuController(mainViewController: navigationController, leftMenuViewController: leftViewController, rightMenuViewController: rightViewController)
+    self.window = UIWindow(frame: UIScreen.main.bounds)
+    self.window?.rootViewController = slideMenuController
+    self.window?.makeKeyAndVisible()
+ 
     return true
   }
 

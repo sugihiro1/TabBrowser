@@ -113,13 +113,11 @@ class TabVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSou
   }
 
 
-  // MARK: セルタップ時のイベントでタブを選択した時に再度ブラウザ画面を開く処理
+  // MARK: セルをタップすることによりタブを選択した時、そのタブに該当するブラウザ画面を開く
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    // 選択したタブを保持
+    // 選択したタブのNoを保存
     myTabIndexPathRow = indexPath.row
-
     // ブラウザ画面に遷移
-    print(indexPath.row)
     self.navigationController?.pushViewController(BrowserVC(delegate:self ,wKWebView: tabDataList[indexPath.row].webView,url:nil), animated: false)
     return
   }
@@ -136,7 +134,7 @@ class TabVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSou
 //    self.myTabIndexPathRow = self.tabDataList.count
 //    self.tabDataList.append(TabData())
 //    collectionView.reloadData()   // 追加
-    self.navigationController?.pushViewController(BrowserVC(delegate:self ,wKWebView: nil,url:url), animated: false)
+    self.navigationController?.pushViewController(BrowserVC(delegate:self ,wKWebView: nil, url:url), animated: false)
   }
   
 
@@ -146,17 +144,6 @@ class TabVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSou
     tabDataList.remove(at: sender.tag)
     collectionView.reloadData()
   }
-
-/*
-  // タブの保存
-  public func saveTab(wkWebView:WKWebView){     // この func が呼び出されない。
-//    self.tabDataList[self.myTabIndexPathRow].webView = wkWebView
-    tabDataList[myTabIndexPathRow].webView = wkWebView
-   // すぐ実行すると真っ白な画像が撮れる為 少し間を空けてサムネイル画像を保存
-    Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: Selector(("saveTabImageExec")), userInfo: nil, repeats: false)
-    print("Saved WebView")
-  }
-*/
   
   // Dropboxから単語htmlファイルをダウンロードするプロシージャ
   @objc func onClickDownloadButton() {
