@@ -10,6 +10,7 @@ import UIKit
 import SwiftyDropbox
 import SlideMenuControllerSwift
 
+// var viewController: UIViewController?
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,14 +23,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     DropboxClientsManager.setupWithAppKey("8yhy6e69tiewf1c")
 
-/*
+
     let viewController: TabVC = TabVC()
     let navigationController = UINavigationController(rootViewController: viewController)
     self.window = UIWindow(frame: UIScreen.main.bounds)
     self.window?.rootViewController = navigationController
     self.window?.makeKeyAndVisible()
-*/
 
+/*
     SlideMenuOptions.leftViewWidth = 300
     SlideMenuOptions.rightViewWidth = 450
     SlideMenuOptions.contentViewScale = 1.0
@@ -45,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     self.window = UIWindow(frame: UIScreen.main.bounds)
     self.window?.rootViewController = slideMenuController
     self.window?.makeKeyAndVisible()
- 
+ */
     return true
   }
 

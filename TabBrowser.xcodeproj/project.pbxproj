@@ -15,6 +15,11 @@
 		9B3C86041FB91B900005113A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3C86031FB91B8E0005113A /* AppDelegate.swift */; };
 		9B3C86061FB937A20005113A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B3C86051FB937A20005113A /* Main.storyboard */; };
 		9B3C86081FB9383E0005113A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3C86071FB9383E0005113A /* ViewController.swift */; };
+		9B64021B1FF4ADAC00D860EC /* RightMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B64021A1FF4ADAC00D860EC /* RightMenuController.swift */; };
+		9B64021D1FF4B70400D860EC /* Search.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B64021C1FF4B70400D860EC /* Search.storyboard */; };
+		9B6402411FFBEF8C00D860EC /* jump.htm in Resources */ = {isa = PBXBuildFile; fileRef = 9B6402401FFBEF8B00D860EC /* jump.htm */; };
+		9B8AC3862025F99B00ED5D5E /* SetUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8AC3852025F99B00ED5D5E /* SetUpController.swift */; };
+		9B8AC3882026C4B800ED5D5E /* DropboxController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8AC3872026C4B800ED5D5E /* DropboxController.swift */; };
 		9BF27D5F1FEB84AD00E2CD41 /* LeftMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF27D5E1FEB84AD00E2CD41 /* LeftMenuController.swift */; };
 		9BF27D831FEF8CCA00E2CD41 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF27D821FEF8CCA00E2CD41 /* SearchViewController.swift */; };
 /* End PBXBuildFile section */
@@ -31,6 +36,11 @@
 		9B3C86031FB91B8E0005113A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9B3C86051FB937A20005113A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		9B3C86071FB9383E0005113A /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9B64021A1FF4ADAC00D860EC /* RightMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightMenuController.swift; sourceTree = "<group>"; };
+		9B64021C1FF4B70400D860EC /* Search.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Search.storyboard; sourceTree = "<group>"; };
+		9B6402401FFBEF8B00D860EC /* jump.htm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jump.htm; sourceTree = "<group>"; };
+		9B8AC3852025F99B00ED5D5E /* SetUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpController.swift; sourceTree = "<group>"; };
+		9B8AC3872026C4B800ED5D5E /* DropboxController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropboxController.swift; sourceTree = "<group>"; };
 		9BF27D5E1FEB84AD00E2CD41 /* LeftMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftMenuController.swift; sourceTree = "<group>"; };
 		9BF27D821FEF8CCA00E2CD41 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		ADA70122FF9DF679E50E0FF5 /* Pods_TabBrowser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TabBrowser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,12 +89,17 @@
 			isa = PBXGroup;
 			children = (
 				9B3C86031FB91B8E0005113A /* AppDelegate.swift */,
+				9B3C86051FB937A20005113A /* Main.storyboard */,
 				9B2646B81FB0606F008CEDC5 /* TabVC.swift */,
 				9B2646B61FB01543008CEDC5 /* BrowserVC.swift */,
+				9B8AC3852025F99B00ED5D5E /* SetUpController.swift */,
 				9BF27D5E1FEB84AD00E2CD41 /* LeftMenuController.swift */,
+				9B8AC3872026C4B800ED5D5E /* DropboxController.swift */,
+				9B64021C1FF4B70400D860EC /* Search.storyboard */,
 				9BF27D821FEF8CCA00E2CD41 /* SearchViewController.swift */,
-				9B3C86051FB937A20005113A /* Main.storyboard */,
+				9B64021A1FF4ADAC00D860EC /* RightMenuController.swift */,
 				9B3C86071FB9383E0005113A /* ViewController.swift */,
+				9B6402401FFBEF8B00D860EC /* jump.htm */,
 				9B2646AB1FB0138A008CEDC5 /* Assets.xcassets */,
 				9B2646AD1FB0138A008CEDC5 /* LaunchScreen.storyboard */,
 				9B2646B01FB0138A008CEDC5 /* Info.plist */,
@@ -164,6 +179,8 @@
 			files = (
 				9B2646AF1FB0138A008CEDC5 /* LaunchScreen.storyboard in Resources */,
 				9B2646AC1FB0138A008CEDC5 /* Assets.xcassets in Resources */,
+				9B64021D1FF4B70400D860EC /* Search.storyboard in Resources */,
+				9B6402411FFBEF8C00D860EC /* jump.htm in Resources */,
 				9B3C86061FB937A20005113A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -225,8 +242,11 @@
 			files = (
 				9BF27D831FEF8CCA00E2CD41 /* SearchViewController.swift in Sources */,
 				9B2646B91FB0606F008CEDC5 /* TabVC.swift in Sources */,
+				9B64021B1FF4ADAC00D860EC /* RightMenuController.swift in Sources */,
+				9B8AC3882026C4B800ED5D5E /* DropboxController.swift in Sources */,
 				9B3C86041FB91B900005113A /* AppDelegate.swift in Sources */,
 				9B3C86081FB9383E0005113A /* ViewController.swift in Sources */,
+				9B8AC3862025F99B00ED5D5E /* SetUpController.swift in Sources */,
 				9BF27D5F1FEB84AD00E2CD41 /* LeftMenuController.swift in Sources */,
 				9B2646B71FB01543008CEDC5 /* BrowserVC.swift in Sources */,
 			);
